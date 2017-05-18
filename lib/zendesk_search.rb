@@ -1,5 +1,5 @@
 require 'zendesk_search/version'
 
 module ZendeskSearch
-  # Your code goes here...
+  require 'zendesk_search/cli'
 end
