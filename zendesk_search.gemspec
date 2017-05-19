@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Zendesk Search'
   spec.description   = 'Zendesk Search'
-  spec.homepage      = "http://www.example.com"
+  spec.homepage      = 'http://www.example.com'
   spec.license       = 'MIT'
 
   spec.files = `git ls-files -z`.split("\x0").reject do |f|
