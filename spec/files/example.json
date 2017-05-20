@@ -1,0 +1,26 @@
+[
+  {
+    "_id": 1,
+    "name": "Francisca Rasmussen",
+    "active": true,
+    "tags": [
+      "first",
+      "example"
+    ]
+  },
+  {
+    "_id": 2,
+    "name": "Cross Barlow",
+    "active": false,
+    "tags": [
+      "second",
+      "example"
+    ]
+  },
+  {
+    "_id": 3,
+    "name": "Ingrid Wagner",
+    "active": true,
+    "tags": [ ]
+  }
+]

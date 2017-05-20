@@ -18,7 +18,6 @@ RSpec.describe ZendeskSearch do
     it 'finds user on id' do
       enters 'users', '_id', '1', 'exit'
       subject.run
-      output.rewind
       output_lines = output.string.lines.map(&:chomp)
       expected_output_array_lines = ['_id : 1',
                                      'url : http://initech.zendesk.com/api/v2/users/1.json',
@@ -53,7 +52,6 @@ RSpec.describe ZendeskSearch do
     it 'finds users on name' do
       enters 'users', 'name', 'Cross Barlow', 'exit'
       subject.run
-      output.rewind
       output_lines = output.string.lines.map(&:chomp)
       expected_output_array_lines = ['_id : 2',
                                      'url : http://initech.zendesk.com/api/v2/users/2.json',
@@ -81,6 +79,16 @@ RSpec.describe ZendeskSearch do
       array_lines = output_lines.last(expected_output_array_lines.size)
       expect(array_lines).to match_array(expected_output_array_lines)
       expect(array_lines).to eq(expected_output_array_lines)
+    end
+
+    it 'finds multiple users on organization_id' do
+      enters 'users', 'organization_id', '104', 'exit'
+      subject.run
+      output_lines = output.string.lines.map(&:chomp)
+      expect(output_lines).to include('_id : 3')
+      expect(output_lines).to include('_id : 7')
+      expect(output_lines).to include('_id : 20')
+      expect(output_lines).to include('_id : 31')
     end
   end
 end
