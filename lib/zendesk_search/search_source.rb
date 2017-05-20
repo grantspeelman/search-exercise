@@ -15,12 +15,24 @@ class ZendeskSearch::SearchSource
 
   def search(term: '', value: '')
     select do |row|
-      row_term = row[term]
-      if row_term.kind_of?(Array)
-        row_term.include?(value)
-      else
-        row_term.to_s == value.to_s
-      end
+      is_row_match?(row, term, value)
+    end
+  end
+
+  def find_first(term: '', value: '')
+    find do |row|
+      is_row_match?(row, term, value)
+    end
+  end
+
+  private
+
+  def is_row_match?(row, term, value)
+    row_term = row[term]
+    if row_term.kind_of?(Array)
+      row_term.include?(value)
+    else
+      row_term.to_s == value.to_s
     end
   end
 end

@@ -88,4 +88,40 @@ RSpec.describe ZendeskSearch::SearchSource do
       end
     end
   end
+
+  describe 'find returns first matching' do
+    let(:source) { ZendeskSearch::SearchSource.new('example',
+                                                   source_directory: 'spec/files') }
+    it 'on _id (number)' do
+      results = source.find_first(term: '_id', value: '1')
+      expect(results).to eq('_id' => 1,
+                            'name' => 'Francisca Rasmussen',
+                            'active' => true,
+                            'tags' => %w(first example))
+    end
+
+    it 'on name (string)' do
+      results = source.find_first(term: 'name', value: 'Ingrid Wagner')
+      expect(results).to eq('_id' => 3,
+                            'name' => 'Ingrid Wagner',
+                            'active' => true,
+                            'tags' => [])
+    end
+
+    it 'on active (boolean)' do
+      results = source.find_first(term: 'active', value: 'false')
+      expect(results).to eq('_id' => 2,
+                            'name' => 'Cross Barlow',
+                            'active' => false,
+                            'tags' => %w(second example))
+    end
+
+    it 'on tags (array of string)' do
+      results = source.find_first(term: 'tags', value: 'example')
+      expect(results).to eq('_id' => 1,
+                            'name' => 'Francisca Rasmussen',
+                            'active' => true,
+                            'tags' => %w(first example))
+    end
+  end
 end

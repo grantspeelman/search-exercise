@@ -32,9 +32,8 @@ module ZendeskSearch
           @highline.say "#{term} : #{value}"
         end
 
-        matched_organisation = organizations.find do |organisation|
-          organisation.fetch('_id') == matched_user.fetch('organization_id')
-        end
+        matched_organisation = organizations.find_first(term: '_id',
+                                                        value:  matched_user.fetch('organization_id'))
         @highline.say "organisation_name : #{matched_organisation.fetch('name')}"
 
         user_id = matched_user.fetch('_id')
