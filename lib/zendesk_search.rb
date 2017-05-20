@@ -37,15 +37,23 @@ module ZendeskSearch
         @highline.say "organisation_name : #{matched_organisation.fetch('name')}"
 
         user_id = matched_user.fetch('_id')
-        submitted_tickets = tickets.search(term: 'submitter_id', value: user_id)
+
+        ticket_association_term = 'submitter_id'
+        submitted_tickets = tickets.search(term: ticket_association_term, value: user_id)
         submitted_ticket_subjects = submitted_tickets.map { |ticket| ticket.fetch('subject') }
+
+        ticket_association_type = 'submitted'
         submitted_ticket_subjects.each do |subject|
-          @highline.say "submitted_ticket : #{subject}"
+          @highline.say "#{ticket_association_type} ticket : #{subject}"
         end
-        assigned_tickets = tickets.search(term: 'assignee_id', value: user_id)
+
+        ticket_association_term = 'assignee_id'
+        assigned_tickets = tickets.search(term: ticket_association_term, value: user_id)
         assigned_ticket_subjects = assigned_tickets.map { |ticket| ticket.fetch('subject') }
+
+        ticket_association_type = 'assigned'
         assigned_ticket_subjects.each do |subject|
-          @highline.say "assigned_ticket : #{subject}"
+          @highline.say "#{ticket_association_type} ticket : #{subject}"
         end
       end
     end

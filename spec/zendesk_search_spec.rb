@@ -39,10 +39,10 @@ RSpec.describe ZendeskSearch do
                                      'suspended : true',
                                      'role : admin',
                                      'organisation_name : Multron',
-                                     'submitted_ticket : A Nuisance in Kiribati',
-                                     'submitted_ticket : A Nuisance in Saint Lucia',
-                                     'assigned_ticket : A Problem in Russian Federation',
-                                     'assigned_ticket : A Problem in Malawi']
+                                     'submitted ticket : A Nuisance in Kiribati',
+                                     'submitted ticket : A Nuisance in Saint Lucia',
+                                     'assigned ticket : A Problem in Russian Federation',
+                                     'assigned ticket : A Problem in Malawi']
 
       array_lines = output_lines.last(expected_output_array_lines.size)
       expect(array_lines).to match_array(expected_output_array_lines)
@@ -73,8 +73,8 @@ RSpec.describe ZendeskSearch do
                                      'suspended : false',
                                      'role : admin',
                                      'organisation_name : Qualitern',
-                                     'assigned_ticket : A Catastrophe in Bermuda',
-                                     'assigned_ticket : A Problem in Svalbard and Jan Mayen Islands']
+                                     'assigned ticket : A Catastrophe in Bermuda',
+                                     'assigned ticket : A Problem in Svalbard and Jan Mayen Islands']
 
       array_lines = output_lines.last(expected_output_array_lines.size)
       expect(array_lines).to match_array(expected_output_array_lines)
