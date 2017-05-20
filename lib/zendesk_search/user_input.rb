@@ -1,6 +1,6 @@
 class ZendeskSearch::UserInput
   # @param [Highline] highline
-  def initialize(highline)
+  def initialize(highline = HighLine.new)
     @highline = highline
   end
 

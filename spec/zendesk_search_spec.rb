@@ -36,14 +36,14 @@ RSpec.describe ZendeskSearch do
                                      'phone : 8335-422-718',
                                      'signature : Don\'t Worry Be Happy!',
                                      'organization_id : 119',
-                                     'tags : Springville,Sutton,Hartsville/Hartley,Diaperville',
+                                     'tags : Springville, Sutton, Hartsville/Hartley, Diaperville',
                                      'suspended : true',
                                      'role : admin',
                                      'organisation_name : Multron',
-                                     'submitted ticket : A Nuisance in Kiribati',
-                                     'submitted ticket : A Nuisance in Saint Lucia',
-                                     'assigned ticket : A Problem in Russian Federation',
-                                     'assigned ticket : A Problem in Malawi']
+                                     'submitted ticket 0 : A Nuisance in Kiribati',
+                                     'submitted ticket 1 : A Nuisance in Saint Lucia',
+                                     'assigned ticket 0 : A Problem in Russian Federation',
+                                     'assigned ticket 1 : A Problem in Malawi']
 
       array_lines = output_lines.last(expected_output_array_lines.size)
       expect(array_lines).to match_array(expected_output_array_lines)
@@ -71,12 +71,12 @@ RSpec.describe ZendeskSearch do
                                      'phone : 9575-552-585',
                                      'signature : Don\'t Worry Be Happy!',
                                      'organization_id : 106',
-                                     'tags : Foxworth,Woodlands,Herlong,Henrietta',
+                                     'tags : Foxworth, Woodlands, Herlong, Henrietta',
                                      'suspended : false',
                                      'role : admin',
                                      'organisation_name : Qualitern',
-                                     'assigned ticket : A Catastrophe in Bermuda',
-                                     'assigned ticket : A Problem in Svalbard and Jan Mayen Islands']
+                                     'assigned ticket 0 : A Catastrophe in Bermuda',
+                                     'assigned ticket 1 : A Problem in Svalbard and Jan Mayen Islands']
 
       array_lines = output_lines.last(expected_output_array_lines.size)
       expect(array_lines).to match_array(expected_output_array_lines)
@@ -105,15 +105,15 @@ RSpec.describe ZendeskSearch do
                                      'url : http://initech.zendesk.com/api/v2/organizations/101.json',
                                      'external_id : 9270ed79-35eb-4a38-a46f-35725197ea8d',
                                      'name : Enthaze',
-                                     'domain_names : kage.com,ecratic.com,endipin.com,zentix.com',
+                                     'domain_names : kage.com, ecratic.com, endipin.com, zentix.com',
                                      'created_at : 2016-05-21T11:10:28 -10:00',
                                      'details : MegaCorp',
                                      'shared_tickets : false',
-                                     'tags : Fulton,West,Rodriguez,Farley',
-                                     'user : Loraine Pittman',
-                                     'user : Francis Bailey',
-                                     'user : Haley Farmer',
-                                     'user : Herrera Norman']
+                                     'tags : Fulton, West, Rodriguez, Farley',
+                                     'user 0 : Loraine Pittman',
+                                     'user 1 : Francis Bailey',
+                                     'user 2 : Haley Farmer',
+                                     'user 3 : Herrera Norman']
 
       array_lines = output_lines.last(expected_output_array_lines.size)
       expect(array_lines).to match_array(expected_output_array_lines)

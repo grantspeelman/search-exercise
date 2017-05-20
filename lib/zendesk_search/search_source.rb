@@ -24,7 +24,7 @@ class ZendeskSearch::SearchSource
 
   def is_row_match?(row, term, value)
     row_term = row[term]
-    if row_term.kind_of?(Array)
+    if row_term.is_a?(Array)
       row_term.include?(value)
     else
       row_term.to_s == value.to_s

@@ -3,52 +3,42 @@ class ZendeskSearch::CLI
   attr_reader :organizations
   attr_reader :users
 
-  def initialize(highline: HighLine.new,
-                 user_input: UserInput.new)
+  def initialize(user_input: ZendeskSearch::UserInput.new,
+                 results_displayer: ZendeskSearch::ResultsDisplayer.new)
 
-    @highline = highline
     @user_input = user_input
     @tickets = ZendeskSearch::SearchSource.new('tickets')
     @organizations = ZendeskSearch::SearchSource.new('organizations')
     @users = ZendeskSearch::SearchSource.new('users')
+    @results_displayer = results_displayer
   end
 
   def run
     @user_input.each do |search_type, search_term, search_value|
       if search_type == 'organizations'
-        search_results = organizations.search(term: search_term, value: search_value)
-        search_results.each do |result|
-          result.each do |term, value|
-            value = value.join(',') if value.respond_to?(:join)
-            @highline.say "#{term} : #{value}"
-          end
-
+        results = organizations.search(term: search_term, value: search_value)
+        results.each do |result|
           matched_users = users.search(term: 'organization_id', value: result.fetch('_id'))
-          matched_users.each do |user|
-            @highline.say "user : #{user.fetch('name')}"
+          matched_users.each_with_index do |user, index|
+            result["user #{index}"] = user.fetch('name').to_s
           end
         end
       else
-        matched_users = users.search(term: search_term, value: search_value)
-        matched_users.each do |matched_user|
-          matched_user.each do |term, value|
-            value = value.join(',') if value.respond_to?(:join)
-            @highline.say "#{term} : #{value}"
-          end
-
+        results = users.search(term: search_term, value: search_value)
+        results.each do |result|
           matched_organisation = organizations.find_first(term: '_id',
-                                                          value:  matched_user.fetch('organization_id'))
-          @highline.say "organisation_name : #{matched_organisation.fetch('name')}"
+                                                          value:  result.fetch('organization_id'))
+          result['organisation_name'] = matched_organisation.fetch('name')
 
-          user_id = matched_user.fetch('_id')
+          user_id = result.fetch('_id')
 
           ticket_association_term = 'submitter_id'
           submitted_tickets = tickets.search(term: ticket_association_term, value: user_id)
           submitted_ticket_subjects = submitted_tickets.map { |ticket| ticket.fetch('subject') }
 
           ticket_association_type = 'submitted'
-          submitted_ticket_subjects.each do |subject|
-            @highline.say "#{ticket_association_type} ticket : #{subject}"
+          submitted_ticket_subjects.each_with_index do |subject, index|
+            result["#{ticket_association_type} ticket #{index}"] = subject
           end
 
           ticket_association_term = 'assignee_id'
@@ -56,12 +46,13 @@ class ZendeskSearch::CLI
           assigned_ticket_subjects = assigned_tickets.map { |ticket| ticket.fetch('subject') }
 
           ticket_association_type = 'assigned'
-          assigned_ticket_subjects.each do |subject|
-            @highline.say "#{ticket_association_type} ticket : #{subject}"
+          assigned_ticket_subjects.each_with_index do |subject, index|
+            result["#{ticket_association_type} ticket #{index}"] = subject
           end
         end
-
       end
+
+      @results_displayer.show(results)
     end
   end
 end
