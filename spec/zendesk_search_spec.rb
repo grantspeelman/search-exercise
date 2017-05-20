@@ -19,6 +19,7 @@ RSpec.describe ZendeskSearch do
       enters 'users', '_id', '1', 'exit'
       subject.run
       output_lines = output.string.lines.map(&:chomp)
+      output_lines.pop(5) # remove Select search type text
       expected_output_array_lines = ['_id : 1',
                                      'url : http://initech.zendesk.com/api/v2/users/1.json',
                                      'external_id : 74341f74-9c79-49d5-9611-87ef9b6eb75f',
@@ -53,6 +54,7 @@ RSpec.describe ZendeskSearch do
       enters 'users', 'name', 'Cross Barlow', 'exit'
       subject.run
       output_lines = output.string.lines.map(&:chomp)
+      output_lines.pop(5) # remove Select search type text
       expected_output_array_lines = ['_id : 2',
                                      'url : http://initech.zendesk.com/api/v2/users/2.json',
                                      'external_id : c9995ea4-ff72-46e0-ab77-dfe0ae1ef6c2',
@@ -85,6 +87,7 @@ RSpec.describe ZendeskSearch do
       enters 'users', 'organization_id', '104', 'exit'
       subject.run
       output_lines = output.string.lines.map(&:chomp)
+      output_lines.pop(5) # remove Select search type text
       expect(output_lines).to include('_id : 3')
       expect(output_lines).to include('_id : 7')
       expect(output_lines).to include('_id : 20')
@@ -97,6 +100,7 @@ RSpec.describe ZendeskSearch do
       enters 'organizations', '_id', '101', 'exit'
       subject.run
       output_lines = output.string.lines.map(&:chomp)
+      output_lines.pop(5) # remove Select search type text
       expected_output_array_lines = ['_id : 101',
                                      'url : http://initech.zendesk.com/api/v2/organizations/101.json',
                                      'external_id : 9270ed79-35eb-4a38-a46f-35725197ea8d',
