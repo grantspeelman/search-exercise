@@ -5,16 +5,16 @@ RSpec.describe ZendeskSearch do
     expect(ZendeskSearch::VERSION).not_to be nil
   end
 
+  let(:output) { StringIO.new('', 'w') }
+  let(:input) { StringIO.new('', 'r') }
+  subject { ZendeskSearch.new_cli(input: input, output: output) }
+
+  def enters(*texts)
+    input.string = texts.join("\n")
+    input.rewind
+  end
+
   describe 'search for users' do
-    let(:output) { StringIO.new('', 'w') }
-    let(:input) { StringIO.new('', 'r') }
-    subject { ZendeskSearch.new_cli(input: input, output: output) }
-
-    def enters(*texts)
-      input.string = texts.join("\n")
-      input.rewind
-    end
-
     it 'finds user on id' do
       enters 'users', '_id', '1', 'exit'
       subject.run
@@ -89,6 +89,31 @@ RSpec.describe ZendeskSearch do
       expect(output_lines).to include('_id : 7')
       expect(output_lines).to include('_id : 20')
       expect(output_lines).to include('_id : 31')
+    end
+  end
+
+  describe 'search for organizations' do
+    it 'finds organization on id' do
+      enters 'organizations', '_id', '101', 'exit'
+      subject.run
+      output_lines = output.string.lines.map(&:chomp)
+      expected_output_array_lines = ['_id : 101',
+                                     'url : http://initech.zendesk.com/api/v2/organizations/101.json',
+                                     'external_id : 9270ed79-35eb-4a38-a46f-35725197ea8d',
+                                     'name : Enthaze',
+                                     'domain_names : kage.com,ecratic.com,endipin.com,zentix.com',
+                                     'created_at : 2016-05-21T11:10:28 -10:00',
+                                     'details : MegaCorp',
+                                     'shared_tickets : false',
+                                     'tags : Fulton,West,Rodriguez,Farley',
+                                     'user : Loraine Pittman',
+                                     'user : Francis Bailey',
+                                     'user : Haley Farmer',
+                                     'user : Herrera Norman']
+
+      array_lines = output_lines.last(expected_output_array_lines.size)
+      expect(array_lines).to match_array(expected_output_array_lines)
+      expect(array_lines).to eq(expected_output_array_lines)
     end
   end
 end
