@@ -1,26 +1,21 @@
 class ZendeskSearch::SearchSource
-  include Enumerable
-
   def initialize(source_name, source_directory: 'data')
     @source_file = "#{source_directory}/#{source_name}.json"
   end
 
-  def each
+  def all
     file_contents = File.read(@source_file)
-    parse_contents = JSON.parse(file_contents)
-    parse_contents.each do |row|
-      yield row
-    end
+    JSON.parse(file_contents)
   end
 
   def search(term: '', value: '')
-    select do |row|
+    all.select do |row|
       is_row_match?(row, term, value)
     end
   end
 
   def find_first(term: '', value: '')
-    find do |row|
+    all.find do |row|
       is_row_match?(row, term, value)
     end
   end

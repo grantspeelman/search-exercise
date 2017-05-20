@@ -5,7 +5,7 @@ RSpec.describe ZendeskSearch::SearchSource do
     it 'loads the json file' do
       source = ZendeskSearch::SearchSource.new('example',
                                                source_directory: 'spec/files')
-      expect(source)
+      expect(source.all)
         .to match_array([{ '_id' => 1,
                            'name' => 'Francisca Rasmussen',
                            'active' => true,
@@ -22,17 +22,17 @@ RSpec.describe ZendeskSearch::SearchSource do
 
     it 'loads users' do
       source = ZendeskSearch::SearchSource.new('users')
-      expect(source.entries.size).to eq(75)
+      expect(source.all.size).to eq(75)
     end
 
     it 'loads organisations' do
       source = ZendeskSearch::SearchSource.new('organizations')
-      expect(source.entries.size).to eq(25)
+      expect(source.all.size).to eq(25)
     end
 
     it 'loads tickets' do
       source = ZendeskSearch::SearchSource.new('tickets')
-      expect(source.entries.size).to eq(200)
+      expect(source.all.size).to eq(200)
     end
   end
 
