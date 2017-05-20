@@ -12,4 +12,15 @@ class ZendeskSearch::SearchSource
       yield row
     end
   end
+
+  def search(term: '', value: '')
+    select do |row|
+      row_term = row[term]
+      if row_term.kind_of?(Array)
+        row_term.include?(value)
+      else
+        row_term.to_s == value.to_s
+      end
+    end
+  end
 end
