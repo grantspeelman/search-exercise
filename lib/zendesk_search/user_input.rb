@@ -12,7 +12,9 @@ class ZendeskSearch::UserInput
       break if search_term == 'exit'
       search_value = @highline.ask 'Select search value'
       break if search_value == 'exit'
-      yield [search_type, search_term, search_value]
+      yield ZendeskSearch::SearchRequest.new(type: search_type,
+                                             term: search_term,
+                                             value: search_value)
     end
   end
 

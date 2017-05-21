@@ -4,6 +4,7 @@ require 'zendesk_search/version'
 
 module ZendeskSearch
   require 'zendesk_search/search_source'
+  require 'zendesk_search/search_request'
   require 'zendesk_search/user_input'
   require 'zendesk_search/results_displayer'
   require 'zendesk_search/cli'

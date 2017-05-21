@@ -14,9 +14,9 @@ class ZendeskSearch::CLI
   end
 
   def run
-    @user_input.each do |search_type, search_term, search_value|
-      if search_type == 'tickets'
-        results = tickets.search(term: search_term, value: search_value)
+    @user_input.each do |search_request|
+      if search_request.type == 'tickets'
+        results = tickets.search(term: search_request.term, value: search_request.value)
         results.each do |result|
           matched_organisation = organizations.find_first(term: '_id',
                                                           value:  result.fetch('organization_id'))
@@ -30,16 +30,16 @@ class ZendeskSearch::CLI
                                               value:  result.fetch('assignee_id'))
           result['assignee name'] = matched_assignee.fetch('name')
         end
-      elsif search_type == 'organizations'
-        results = organizations.search(term: search_term, value: search_value)
+      elsif search_request.type == 'organizations'
+        results = organizations.search(term: search_request.term, value: search_request.value)
         results.each do |result|
           matched_users = users.search(term: 'organization_id', value: result.fetch('_id'))
           matched_users.each_with_index do |user, index|
             result["user #{index}"] = user.fetch('name').to_s
           end
         end
-      elsif search_type == 'users'
-        results = users.search(term: search_term, value: search_value)
+      elsif search_request.type == 'users'
+        results = users.search(term: search_request.term, value: search_request.value)
         results.each do |result|
           matched_organisation = organizations.find_first(term: '_id',
                                                           value:  result.fetch('organization_id'))

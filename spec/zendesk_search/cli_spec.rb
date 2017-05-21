@@ -17,8 +17,12 @@ RSpec.describe ZendeskSearch::CLI do
                            results_displayer: results_displayer)
   end
 
+  def request(type, term, value)
+    ZendeskSearch::SearchRequest.new(type: type, term: term, value: value)
+  end
+
   it 'finds users' do
-    user_input << %w(users _id 1)
+    user_input << request('users', '_id', '1')
     subject.run
     expect(results_displayer.show_results.size).to eq(1)
     first_result = results_displayer.show_results.first
@@ -50,7 +54,7 @@ RSpec.describe ZendeskSearch::CLI do
   end
 
   it 'finds multiple users on organization_id' do
-    user_input << %w(users organization_id 104)
+    user_input << request('users', 'organization_id', '104')
     subject.run
     expect(results_displayer.show_results.size).to eq(4)
     ids = results_displayer.show_results.map { |result| result.fetch('_id') }
@@ -58,7 +62,7 @@ RSpec.describe ZendeskSearch::CLI do
   end
 
   it 'finds organizations on id' do
-    user_input << %w(organizations _id 101)
+    user_input << request('organizations', '_id', '101')
     subject.run
     expect(results_displayer.show_results.size).to eq(1)
     first_result = results_displayer.show_results.first
@@ -79,7 +83,7 @@ RSpec.describe ZendeskSearch::CLI do
   end
 
   it 'finds tickets on id' do
-    user_input << %w(tickets _id 436bf9b0-1147-4c0a-8439-6f79833bff5b)
+    user_input << request('tickets', '_id', '436bf9b0-1147-4c0a-8439-6f79833bff5b')
     subject.run
     expect(results_displayer.show_results.size).to eq(1)
     first_result = results_displayer.show_results.first
