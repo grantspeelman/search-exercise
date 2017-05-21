@@ -1,0 +1,23 @@
+tickets:
+  - :name: organization
+    :associate_source: organizations
+    :associate_term: _id
+    :term: organization_id
+  - :name: owner
+    :associate_source: users
+    :associate_term: _id
+    :term: owner_id
+organizations:
+  - :name: user
+    :associate_source: users
+    :associate_term: organization_id
+    :term: _id
+users:
+  - :name: organization
+    :associate_source: organizations
+    :associate_term: _id
+    :term: organization_id
+  - :name: ticket
+    :associate_source: tickets
+    :associate_term: owner_id
+    :term: _id

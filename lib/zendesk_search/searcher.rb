@@ -1,31 +1,37 @@
 class ZendeskSearch::Searcher
-  def initialize(association_config: ZendeskSearch::SourceAssociationConfig.new)
-    @association_config = association_config
+  def initialize(source_directory: 'data',
+                 association_config_class: ZendeskSearch::SourceAssociationConfig)
+    @source_directory = source_directory
+    @association_config = association_config_class.new(source_directory)
   end
 
   # @param [ZendeskSearch::SearchRequest] request
   # @return [Array<Hash>]
   def search(request)
     # do initial search
-    source = ZendeskSearch::SearchSource.new(request.type)
+    source = ZendeskSearch::SearchSource.new(request.type, @source_directory)
     results = source.search(term: request.term, value: request.value).map do |raw_result|
       ZendeskSearch::SearchResult.new(raw_result)
     end
 
     # define mappings
-    associated_mappings = @association_config.for(request.type)
+    association_descs = @association_config.descriptions_for(request.type)
 
     # do mapping
     results.each do |result|
-      associated_mappings.each do |associated_mapping|
-        associated_source = ZendeskSearch::SearchSource.new(associated_mapping.fetch(:associate_source))
-        associated_results = associated_source.search(term: associated_mapping.fetch(:associate_term),
-                                                      value:  result.fetch(associated_mapping.fetch(:term)))
-        associated_results.each_with_index do |associated_result, index|
-          result_key = "#{associated_mapping.fetch(:name)} #{index} #{associated_mapping.fetch(:display)}"
-          result[result_key] = associated_result.fetch(associated_mapping.fetch(:display))
-        end
+      association_descs.each do |association_desc|
+        associated_source = ZendeskSearch::SearchSource.new(association_desc.associate_source, @source_directory)
+        associated_results = associated_source.search(term: association_desc.associate_term,
+                                                      value:  result.attributes.fetch(association_desc.term))
+
+        result[association_desc] = associated_results
       end
     end
+  end
+
+  private
+
+  def source_filename(type)
+    "#{source_directory}/#{type}.json"
   end
 end

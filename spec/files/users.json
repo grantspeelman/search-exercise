@@ -1,0 +1,23 @@
+[
+  {
+    "_id": 1,
+    "organization_id": 1,
+    "name": "Francisca Rasmussen",
+    "active": true,
+    "tags": [ "first", "example" ]
+  },
+  {
+    "_id": 2,
+    "organization_id": 1,
+    "name": "Cross Barlow",
+    "active": false,
+    "tags": [ "second", "example" ]
+  },
+  {
+    "_id": 3,
+    "organization_id": 1,
+    "name": "Ingrid Wagner",
+    "active": true,
+    "tags": [ ]
+  }
+]

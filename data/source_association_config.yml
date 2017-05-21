@@ -3,36 +3,29 @@ tickets:
     :associate_source: organizations
     :associate_term: _id
     :term: organization_id
-    :display: name
   - :name: submitter
     :associate_source: users
     :associate_term: _id
     :term: submitter_id
-    :display: name
   - :name: assignee
     :associate_source: users
     :associate_term: _id
     :term: assignee_id
-    :display: name
 organizations:
   - :name: user
     :associate_source: users
     :associate_term: organization_id
     :term: _id
-    :display: name
 users:
   - :name: organization
     :associate_source: organizations
     :associate_term: _id
     :term: organization_id
-    :display: name
   - :name: submitted ticket
     :associate_source: tickets
     :associate_term: submitter_id
     :term: _id
-    :display: subject
   - :name: assigned ticket
     :associate_source: tickets
     :associate_term: assignee_id
     :term: _id
-    :display: subject

@@ -6,6 +6,7 @@ module ZendeskSearch
   require 'zendesk_search/search_source'
   require 'zendesk_search/search_request'
   require 'zendesk_search/search_result'
+  require 'zendesk_search/association_description'
   require 'zendesk_search/source_association_config'
   require 'zendesk_search/searcher'
   require 'zendesk_search/user_input'

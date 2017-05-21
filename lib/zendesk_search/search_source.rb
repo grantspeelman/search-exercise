@@ -1,5 +1,5 @@
 class ZendeskSearch::SearchSource
-  def initialize(source_name, source_directory: 'data')
+  def initialize(source_name, source_directory)
     @source_file = "#{source_directory}/#{source_name}.json"
   end
 

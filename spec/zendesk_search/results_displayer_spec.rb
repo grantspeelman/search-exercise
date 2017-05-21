@@ -33,4 +33,21 @@ RSpec.describe ZendeskSearch::ResultsDisplayer do
                                 "----------\n" \
                                 "tags : one, two\n")
   end
+
+  it 'can display associated data' do
+    assocation = ZendeskSearch::AssociationDescription.new(name: 'owner',
+                                                           associate_source: 'blah',
+                                                           associate_term: 'blah',
+                                                           term: 'blah')
+    result1 = instance_double('ZendeskSearch::SearchResult',
+                              attributes: { assocation => [{ 'name' => 'hello' },
+                                                           { 'name' => 'good' }] })
+    result2 = instance_double('ZendeskSearch::SearchResult',
+                              attributes: { assocation => [{ 'subject' => 'other' }] })
+    subject.show_results([result1, result2])
+    expect(output.string).to eq("owner 0 : hello\n" \
+                                "owner 1 : good\n" \
+                                "----------\n" \
+                                "owner 0 : other\n")
+  end
 end

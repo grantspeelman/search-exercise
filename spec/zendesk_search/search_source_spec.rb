@@ -3,8 +3,7 @@ require 'spec_helper'
 RSpec.describe ZendeskSearch::SearchSource do
   describe 'loading' do
     it 'loads the json file' do
-      source = ZendeskSearch::SearchSource.new('example',
-                                               source_directory: 'spec/files')
+      source = ZendeskSearch::SearchSource.new('example', 'spec/files')
       expect(source.all)
         .to match_array([{ '_id' => 1,
                            'name' => 'Francisca Rasmussen',
@@ -21,17 +20,17 @@ RSpec.describe ZendeskSearch::SearchSource do
     end
 
     it 'loads users' do
-      source = ZendeskSearch::SearchSource.new('users')
+      source = ZendeskSearch::SearchSource.new('users', 'data')
       expect(source.all.size).to eq(75)
     end
 
     it 'loads organisations' do
-      source = ZendeskSearch::SearchSource.new('organizations')
+      source = ZendeskSearch::SearchSource.new('organizations', 'data')
       expect(source.all.size).to eq(25)
     end
 
     it 'loads tickets' do
-      source = ZendeskSearch::SearchSource.new('tickets')
+      source = ZendeskSearch::SearchSource.new('tickets', 'data')
       expect(source.all.size).to eq(200)
     end
   end
@@ -39,8 +38,7 @@ RSpec.describe ZendeskSearch::SearchSource do
   describe 'search returns all matching' do
     context 'example source' do
       let(:source) do
-        ZendeskSearch::SearchSource.new('example',
-                                        source_directory: 'spec/files')
+        ZendeskSearch::SearchSource.new('example', 'spec/files')
       end
       it 'on _id (number)' do
         results = source.search(term: '_id', value: '1')
@@ -80,7 +78,7 @@ RSpec.describe ZendeskSearch::SearchSource do
     end
 
     context 'tickets' do
-      let(:source) { ZendeskSearch::SearchSource.new('tickets') }
+      let(:source) { ZendeskSearch::SearchSource.new('tickets', 'data') }
 
       it 'when value is an integer' do
         results = source.search(term: 'submitter_id', value: 1)
@@ -93,8 +91,7 @@ RSpec.describe ZendeskSearch::SearchSource do
 
   describe 'find returns first matching' do
     let(:source) do
-      ZendeskSearch::SearchSource.new('example',
-                                      source_directory: 'spec/files')
+      ZendeskSearch::SearchSource.new('example', 'spec/files')
     end
     it 'on _id (number)' do
       results = source.find_first(term: '_id', value: '1')
