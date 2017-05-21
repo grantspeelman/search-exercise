@@ -1,65 +1,74 @@
 class ZendeskSearch::Searcher
-  def initialize
-    @tickets = ZendeskSearch::SearchSource.new('tickets')
-    @organizations = ZendeskSearch::SearchSource.new('organizations')
-    @users = ZendeskSearch::SearchSource.new('users')
-  end
-
   # @param [ZendeskSearch::SearchRequest] request
   # @return [Array<Hash>]
   def search(request)
+    # do initial search
+    source = ZendeskSearch::SearchSource.new(request.type)
+    results = source.search(term: request.term, value: request.value).map do |raw_result|
+      ZendeskSearch::SearchResult.new(raw_result)
+    end
+
+    # define mappings
     if request.type == 'tickets'
-      results = @tickets.search(term: request.term, value: request.value)
-      results.map do |result|
-        matched_organisation = @organizations.find_first(term: '_id',
-                                                         value:  result.fetch('organization_id'))
-        result['organisation name'] = matched_organisation.fetch('name')
-
-        matched_submitter = @users.find_first(term: '_id',
-                                              value:  result.fetch('submitter_id'))
-        result['submitter name'] = matched_submitter.fetch('name')
-
-        matched_assignee = @users.find_first(term: '_id',
-                                             value:  result.fetch('assignee_id'))
-        result['assignee name'] = matched_assignee.fetch('name')
-        ZendeskSearch::SearchResult.new(result)
-      end
+      associated_mappings = [
+        { name: 'organization',
+          type: 'organizations',
+          term: '_id',
+          match_on: 'organization_id',
+          display: 'name' },
+        {
+          name: 'submitter',
+          type: 'users',
+          term: '_id',
+          match_on: 'submitter_id',
+          display: 'name'
+        },
+        {
+          name: 'assignee',
+          type: 'users',
+          term: '_id',
+          match_on: 'assignee_id',
+          display: 'name'
+        }
+      ]
     elsif request.type == 'organizations'
-      results = @organizations.search(term: request.term, value: request.value)
-      results.map do |result|
-        matched_users = @users.search(term: 'organization_id', value: result.fetch('_id'))
-        matched_users.each_with_index do |user, index|
-          result["user #{index}"] = user.fetch('name').to_s
-        end
-        ZendeskSearch::SearchResult.new(result)
-      end
+      associated_mappings = [
+        { name: 'user',
+          type: 'users',
+          term: 'organization_id',
+          match_on: '_id',
+          display: 'name' }
+      ]
     elsif request.type == 'users'
-      results = @users.search(term: request.term, value: request.value)
-      results.map do |result|
-        matched_organisation = @organizations.find_first(term: '_id',
-                                                         value:  result.fetch('organization_id'))
-        result['organisation_name'] = matched_organisation.fetch('name')
+      associated_mappings = [
+        { name: 'organization',
+          type: 'organizations',
+          term: '_id',
+          match_on: 'organization_id',
+          display: 'name' },
+        { name: 'submitted ticket',
+          type: 'tickets',
+          term: 'submitter_id',
+          match_on: '_id',
+          display: 'subject' },
+        { name: 'assigned ticket',
+          type: 'tickets',
+          term: 'assignee_id',
+          match_on: '_id',
+          display: 'subject' }
+      ]
+    end
 
-        user_id = result.fetch('_id')
-
-        ticket_association_term = 'submitter_id'
-        submitted_tickets = @tickets.search(term: ticket_association_term, value: user_id)
-        submitted_ticket_subjects = submitted_tickets.map { |ticket| ticket.fetch('subject') }
-
-        ticket_association_type = 'submitted'
-        submitted_ticket_subjects.each_with_index do |subject, index|
-          result["#{ticket_association_type} ticket #{index}"] = subject
+    # do mapping
+    results.each do |result|
+      associated_mappings.each do |associated_mapping|
+        associated_source = ZendeskSearch::SearchSource.new(associated_mapping.fetch(:type))
+        associated_results = associated_source.search(term: associated_mapping.fetch(:term),
+                                                      value:  result.fetch(associated_mapping.fetch(:match_on)))
+        associated_results.each_with_index do |associated_result, index|
+          result_key = "#{associated_mapping.fetch(:name)} #{index} #{associated_mapping.fetch(:display)}"
+          result[result_key] = associated_result.fetch(associated_mapping.fetch(:display))
         end
-
-        ticket_association_term = 'assignee_id'
-        assigned_tickets = @tickets.search(term: ticket_association_term, value: user_id)
-        assigned_ticket_subjects = assigned_tickets.map { |ticket| ticket.fetch('subject') }
-
-        ticket_association_type = 'assigned'
-        assigned_ticket_subjects.each_with_index do |subject, index|
-          result["#{ticket_association_type} ticket #{index}"] = subject
-        end
-        ZendeskSearch::SearchResult.new(result)
       end
     end
   end

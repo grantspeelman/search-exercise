@@ -39,11 +39,11 @@ RSpec.describe ZendeskSearch do
                                      'tags : Springville, Sutton, Hartsville/Hartley, Diaperville',
                                      'suspended : true',
                                      'role : admin',
-                                     'organisation_name : Multron',
-                                     'submitted ticket 0 : A Nuisance in Kiribati',
-                                     'submitted ticket 1 : A Nuisance in Saint Lucia',
-                                     'assigned ticket 0 : A Problem in Russian Federation',
-                                     'assigned ticket 1 : A Problem in Malawi']
+                                     'organization 0 name : Multron',
+                                     'submitted ticket 0 subject : A Nuisance in Kiribati',
+                                     'submitted ticket 1 subject : A Nuisance in Saint Lucia',
+                                     'assigned ticket 0 subject : A Problem in Russian Federation',
+                                     'assigned ticket 1 subject : A Problem in Malawi']
 
       array_lines = output_lines.last(expected_output_array_lines.size)
       expect(array_lines).to match_array(expected_output_array_lines)
@@ -74,9 +74,9 @@ RSpec.describe ZendeskSearch do
                                      'tags : Foxworth, Woodlands, Herlong, Henrietta',
                                      'suspended : false',
                                      'role : admin',
-                                     'organisation_name : Qualitern',
-                                     'assigned ticket 0 : A Catastrophe in Bermuda',
-                                     'assigned ticket 1 : A Problem in Svalbard and Jan Mayen Islands']
+                                     'organization 0 name : Qualitern',
+                                     'assigned ticket 0 subject : A Catastrophe in Bermuda',
+                                     'assigned ticket 1 subject : A Problem in Svalbard and Jan Mayen Islands']
 
       array_lines = output_lines.last(expected_output_array_lines.size)
       expect(array_lines).to match_array(expected_output_array_lines)
@@ -110,10 +110,10 @@ RSpec.describe ZendeskSearch do
                                      'details : MegaCorp',
                                      'shared_tickets : false',
                                      'tags : Fulton, West, Rodriguez, Farley',
-                                     'user 0 : Loraine Pittman',
-                                     'user 1 : Francis Bailey',
-                                     'user 2 : Haley Farmer',
-                                     'user 3 : Herrera Norman']
+                                     'user 0 name : Loraine Pittman',
+                                     'user 1 name : Francis Bailey',
+                                     'user 2 name : Haley Farmer',
+                                     'user 3 name : Herrera Norman']
 
       array_lines = output_lines.last(expected_output_array_lines.size)
       expect(array_lines).to match_array(expected_output_array_lines)

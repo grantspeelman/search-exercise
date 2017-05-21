@@ -8,4 +8,8 @@ class ZendeskSearch::SearchResult
   def fetch(field)
     @attributes.fetch(field)
   end
+
+  def []=(key, value)
+    @attributes[key] = value
+  end
 end

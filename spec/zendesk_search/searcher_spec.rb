@@ -5,7 +5,7 @@ RSpec.describe ZendeskSearch::Searcher do
     ZendeskSearch::SearchRequest.new(type: type, term: term, value: value)
   end
 
-  it 'finds user on _id' do
+  it 'finds user on _id and maps associations' do
     results = subject.search(request('users', '_id', '1'))
     expect(results.size).to eq(1)
     first_result = results.first
@@ -29,11 +29,11 @@ RSpec.describe ZendeskSearch::Searcher do
              'tags' => ['Springville', 'Sutton', 'Hartsville/Hartley', 'Diaperville'],
              'suspended' => true,
              'role' => 'admin',
-             'organisation_name' => 'Multron',
-             'submitted ticket 0' => 'A Nuisance in Kiribati',
-             'submitted ticket 1' => 'A Nuisance in Saint Lucia',
-             'assigned ticket 0' => 'A Problem in Russian Federation',
-             'assigned ticket 1' => 'A Problem in Malawi')
+             'organization 0 name' => 'Multron',
+             'submitted ticket 0 subject' => 'A Nuisance in Kiribati',
+             'submitted ticket 1 subject' => 'A Nuisance in Saint Lucia',
+             'assigned ticket 0 subject' => 'A Problem in Russian Federation',
+             'assigned ticket 1 subject' => 'A Problem in Malawi')
   end
 
   it 'finds multiple users on organization_id' do
@@ -43,7 +43,7 @@ RSpec.describe ZendeskSearch::Searcher do
     expect(ids).to contain_exactly(3, 7, 20, 31)
   end
 
-  it 'finds organizations on id' do
+  it 'finds organizations on id and maps associations' do
     results = subject.search(request('organizations', '_id', '101'))
     expect(results.size).to eq(1)
     first_result = results.first
@@ -57,13 +57,13 @@ RSpec.describe ZendeskSearch::Searcher do
              'details' => 'MegaCorp',
              'shared_tickets' => false,
              'tags' => %w(Fulton West Rodriguez Farley),
-             'user 0' => 'Loraine Pittman',
-             'user 1' => 'Francis Bailey',
-             'user 2' => 'Haley Farmer',
-             'user 3' => 'Herrera Norman')
+             'user 0 name' => 'Loraine Pittman',
+             'user 1 name' => 'Francis Bailey',
+             'user 2 name' => 'Haley Farmer',
+             'user 3 name' => 'Herrera Norman')
   end
 
-  it 'finds tickets on id' do
+  it 'finds tickets on id and maps associations' do
     results = subject.search(request('tickets', '_id', '436bf9b0-1147-4c0a-8439-6f79833bff5b'))
     expect(results.size).to eq(1)
     first_result = results.first
@@ -84,8 +84,8 @@ RSpec.describe ZendeskSearch::Searcher do
              'has_incidents' => false,
              'due_at' => '2016-07-31T02:37:50 -10:00',
              'via' => 'web',
-             'submitter name' => 'Elma Castro',
-             'assignee name' => 'Harris Côpeland',
-             'organisation name' => 'Zentry')
+             'submitter 0 name' => 'Elma Castro',
+             'assignee 0 name' => 'Harris Côpeland',
+             'organization 0 name' => 'Zentry')
   end
 end
