@@ -10,8 +10,15 @@ class ZendeskSearch::CLI
 
   def run
     @user_input.each do |search_request|
-      results = @searcher.search(search_request)
-      @results_displayer.show_results(results)
+      begin
+        results = @searcher.search(search_request)
+        @results_displayer.show_results(results)
+      rescue JSON::ParserError => e
+        $stderr << "Error parsing a source : #{e.message}\n"
+      rescue => e
+        $stderr << "Unexpected Error occured! : #{e.message}\n"
+        break
+      end
     end
   end
 end
