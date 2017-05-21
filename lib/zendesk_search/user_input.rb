@@ -1,7 +1,10 @@
 class ZendeskSearch::UserInput
+  attr_accessor :source_choices
+
   # @param [Highline] highline
   def initialize(highline = HighLine.new)
     @highline = highline
+    @source_choices = []
   end
 
   def each
@@ -23,7 +26,8 @@ class ZendeskSearch::UserInput
   def select_search_type
     @highline.choose do |menu|
       menu.prompt = 'Select search type'
-      menu.choices('users', 'organizations', 'tickets', 'exit')
+      menu.choices(*source_choices)
+      menu.choice('exit')
     end
   end
 end

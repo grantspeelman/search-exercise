@@ -5,6 +5,10 @@ RSpec.describe ZendeskSearch::UserInput do
   let(:highline) { HighLine.new(input, StringIO.new) }
   subject { ZendeskSearch::UserInput.new(highline) }
 
+  before do
+    subject.source_choices = %w(organizations tickets users)
+  end
+
   def enters(*texts)
     input.string = texts.join("\n")
     input.rewind

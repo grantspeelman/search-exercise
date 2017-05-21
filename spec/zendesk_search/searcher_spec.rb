@@ -97,4 +97,18 @@ RSpec.describe ZendeskSearch::Searcher do
              org_assocation => [{ '_id' => 1,
                                   'name' => 'Zendesk' }])
   end
+
+  it 'returns all the search sources' do
+    expect(subject.search_sources).to contain_exactly('example',
+                                                      'organizations',
+                                                      'tickets',
+                                                      'users')
+  end
+
+  it 'returns all the search sources in default data directory' do
+    searcher = ZendeskSearch::Searcher.new
+    expect(searcher.search_sources).to contain_exactly('organizations',
+                                                       'tickets',
+                                                       'users')
+  end
 end

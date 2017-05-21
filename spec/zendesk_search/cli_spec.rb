@@ -2,10 +2,11 @@ require 'spec_helper'
 
 RSpec.describe ZendeskSearch::CLI do
   let(:user_input) { [] }
-  let(:results_displayer) { instance_double('ZendeskSearchResult', show_results: true) }
-  let(:searcher) { instance_double('ZendeskSearch::Searcher', search: true) }
+  let(:results_displayer) { instance_double('ZendeskSearch::ResultsDisplayer', show_results: true) }
+  let(:searcher) { instance_double('ZendeskSearch::Searcher', search: true, search_sources: ['test']) }
 
   subject do
+    expect(user_input).to receive(:source_choices=).with(['test'])
     ZendeskSearch::CLI.new(user_input: user_input,
                            results_displayer: results_displayer,
                            searcher: searcher)

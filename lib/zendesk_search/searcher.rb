@@ -29,9 +29,9 @@ class ZendeskSearch::Searcher
     end
   end
 
-  private
-
-  def source_filename(type)
-    "#{source_directory}/#{type}.json"
+  def search_sources
+    Dir["#{@source_directory}/*.json"].map do |filename|
+      filename.gsub("#{@source_directory}/", '').gsub('.json', '')
+    end
   end
 end
