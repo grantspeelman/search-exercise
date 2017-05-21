@@ -30,12 +30,16 @@ class ZendeskSearch::ResultsDisplayer
 
   # @param [Array<ZendeskSearch::SearchResult>] results
   def show_results(results)
-    array_of_text_results = results.map do |result|
-      result.attributes.map do |term, value|
-        line_formatter = @line_formatters_hash["#{term.class}#{value.class}LineFormatter"]
-        line_formatter.format(term, value)
-      end.join
+    if results.empty?
+      @highline.say "No results found\n"
+    else
+      array_of_text_results = results.map do |result|
+        result.attributes.map do |term, value|
+          line_formatter = @line_formatters_hash["#{term.class}#{value.class}LineFormatter"]
+          line_formatter.format(term, value)
+        end.join
+      end
+      @highline.say array_of_text_results.join("----------------------------\n")
     end
-    @highline.say array_of_text_results.join("----------\n")
   end
 end

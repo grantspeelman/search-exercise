@@ -19,7 +19,7 @@ RSpec.describe ZendeskSearch::ResultsDisplayer do
                               attributes: { 'name' => 'mac', 'surname' => 'James' })
     subject.show_results([result1, result2])
     expect(output.string).to eq("name : billy\nsurname : bob\n" \
-                                "----------\n" \
+                                "----------------------------\n" \
                                 "name : mac\nsurname : James\n")
   end
 
@@ -30,7 +30,7 @@ RSpec.describe ZendeskSearch::ResultsDisplayer do
                               attributes: { 'tags' => %w(one two) })
     subject.show_results([result1, result2])
     expect(output.string).to eq("tags : \n" \
-                                "----------\n" \
+                                "----------------------------\n" \
                                 "tags : one, two\n")
   end
 
@@ -47,7 +47,12 @@ RSpec.describe ZendeskSearch::ResultsDisplayer do
     subject.show_results([result1, result2])
     expect(output.string).to eq("owner 0 : hello\n" \
                                 "owner 1 : good\n" \
-                                "----------\n" \
+                                "----------------------------\n" \
                                 "owner 0 : other\n")
+  end
+
+  it 'says not results found if array empty' do
+    subject.show_results([])
+    expect(output.string).to eq("No results found\n")
   end
 end
