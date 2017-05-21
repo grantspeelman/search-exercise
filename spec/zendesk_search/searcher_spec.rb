@@ -9,7 +9,7 @@ RSpec.describe ZendeskSearch::Searcher do
     results = subject.search(request('users', '_id', '1'))
     expect(results.size).to eq(1)
     first_result = results.first
-    expect(first_result)
+    expect(first_result.attributes)
       .to eq('_id' => 1,
              'url' =>  'http://initech.zendesk.com/api/v2/users/1.json',
              'external_id' => '74341f74-9c79-49d5-9611-87ef9b6eb75f',
@@ -47,7 +47,7 @@ RSpec.describe ZendeskSearch::Searcher do
     results = subject.search(request('organizations', '_id', '101'))
     expect(results.size).to eq(1)
     first_result = results.first
-    expect(first_result)
+    expect(first_result.attributes)
       .to eq('_id' => 101,
              'url' => 'http://initech.zendesk.com/api/v2/organizations/101.json',
              'external_id' => '9270ed79-35eb-4a38-a46f-35725197ea8d',
@@ -67,7 +67,7 @@ RSpec.describe ZendeskSearch::Searcher do
     results = subject.search(request('tickets', '_id', '436bf9b0-1147-4c0a-8439-6f79833bff5b'))
     expect(results.size).to eq(1)
     first_result = results.first
-    expect(first_result)
+    expect(first_result.attributes)
       .to eq('_id' => '436bf9b0-1147-4c0a-8439-6f79833bff5b',
              'url' => 'http://initech.zendesk.com/api/v2/tickets/436bf9b0-1147-4c0a-8439-6f79833bff5b.json',
              'external_id' => '9210cdc9-4bee-485f-a078-35396cd74063',

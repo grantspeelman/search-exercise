@@ -15,7 +15,7 @@ class ZendeskSearch::CLI
   def run
     @user_input.each do |search_request|
       results = @searcher.search(search_request)
-      @results_displayer.show(results)
+      @results_displayer.show_results(results)
     end
   end
 end

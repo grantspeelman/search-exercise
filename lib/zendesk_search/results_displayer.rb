@@ -4,10 +4,10 @@ class ZendeskSearch::ResultsDisplayer
     @highline = highline
   end
 
-  # @param [Array<Hash>] results
-  def show(results)
+  # @param [Array<ZendeskSearch::SearchResult>] results
+  def show_results(results)
     array_of_text_results = results.map do |result|
-      result.map do |term, value|
+      result.attributes.map do |term, value|
         if value.is_a?(Array)
           "#{term} : #{value.join(', ')}\n"
         else

@@ -5,21 +5,30 @@ RSpec.describe ZendeskSearch::ResultsDisplayer do
   let(:highline) { HighLine.new(StringIO.new, output) }
   subject { ZendeskSearch::ResultsDisplayer.new(highline) }
 
-  it 'displays single array of hash' do
-    subject.show([{ 'name' => 'bob', 'surname' => 'Jack' }])
+  it 'shows search result with main attributes' do
+    result = instance_double('ZendeskSearch::SearchResult',
+                             attributes: { 'name' => 'bob', 'surname' => 'Jack' })
+    subject.show_results([result])
     expect(output.string).to eq("name : bob\nsurname : Jack\n")
   end
 
   it 'can display multiple results' do
-    subject.show([{ 'name' => 'billy', 'surname' => 'bob' },
-                  { 'name' => 'mac', 'surname' => 'James' }])
+    result1 = instance_double('ZendeskSearch::SearchResult',
+                              attributes: { 'name' => 'billy', 'surname' => 'bob' })
+    result2 = instance_double('ZendeskSearch::SearchResult',
+                              attributes: { 'name' => 'mac', 'surname' => 'James' })
+    subject.show_results([result1, result2])
     expect(output.string).to eq("name : billy\nsurname : bob\n" \
                                 "----------\n" \
                                 "name : mac\nsurname : James\n")
   end
 
   it 'can display value of type array' do
-    subject.show([{ 'tags' => [] }, { 'tags' => %w(one two) }])
+    result1 = instance_double('ZendeskSearch::SearchResult',
+                              attributes: { 'tags' => [] })
+    result2 = instance_double('ZendeskSearch::SearchResult',
+                              attributes: { 'tags' => %w(one two) })
+    subject.show_results([result1, result2])
     expect(output.string).to eq("tags : \n" \
                                 "----------\n" \
                                 "tags : one, two\n")

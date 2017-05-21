@@ -10,7 +10,7 @@ class ZendeskSearch::Searcher
   def search(request)
     if request.type == 'tickets'
       results = @tickets.search(term: request.term, value: request.value)
-      results.each do |result|
+      results.map do |result|
         matched_organisation = @organizations.find_first(term: '_id',
                                                          value:  result.fetch('organization_id'))
         result['organisation name'] = matched_organisation.fetch('name')
@@ -22,18 +22,20 @@ class ZendeskSearch::Searcher
         matched_assignee = @users.find_first(term: '_id',
                                              value:  result.fetch('assignee_id'))
         result['assignee name'] = matched_assignee.fetch('name')
+        ZendeskSearch::SearchResult.new(result)
       end
     elsif request.type == 'organizations'
       results = @organizations.search(term: request.term, value: request.value)
-      results.each do |result|
+      results.map do |result|
         matched_users = @users.search(term: 'organization_id', value: result.fetch('_id'))
         matched_users.each_with_index do |user, index|
           result["user #{index}"] = user.fetch('name').to_s
         end
+        ZendeskSearch::SearchResult.new(result)
       end
     elsif request.type == 'users'
       results = @users.search(term: request.term, value: request.value)
-      results.each do |result|
+      results.map do |result|
         matched_organisation = @organizations.find_first(term: '_id',
                                                          value:  result.fetch('organization_id'))
         result['organisation_name'] = matched_organisation.fetch('name')
@@ -57,6 +59,7 @@ class ZendeskSearch::Searcher
         assigned_ticket_subjects.each_with_index do |subject, index|
           result["#{ticket_association_type} ticket #{index}"] = subject
         end
+        ZendeskSearch::SearchResult.new(result)
       end
     end
   end
