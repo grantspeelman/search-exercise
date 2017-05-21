@@ -22,7 +22,7 @@ class ZendeskSearch::Searcher
       association_descs.each do |association_desc|
         associated_source = ZendeskSearch::SearchSource.new(association_desc.associate_source, @source_directory)
         associated_results = associated_source.search(term: association_desc.associate_term,
-                                                      value:  result.attributes.fetch(association_desc.term))
+                                                      value:  result.attributes[association_desc.term])
 
         result[association_desc] = associated_results
       end

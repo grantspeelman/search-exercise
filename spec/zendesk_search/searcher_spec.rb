@@ -98,6 +98,29 @@ RSpec.describe ZendeskSearch::Searcher do
                                   'name' => 'Zendesk' }])
   end
 
+  it 'empty associations if ticket missing term key' do
+    owner_assocation = ZendeskSearch::AssociationDescription.new(name: 'owner',
+                                                                 associate_source: 'users',
+                                                                 associate_term: '_id',
+                                                                 term: 'owner_id')
+    org_assocation = ZendeskSearch::AssociationDescription.new(name: 'organization',
+                                                               associate_source: 'organizations',
+                                                               associate_term: '_id',
+                                                               term: 'organization_id')
+    expect(association_config).to receive(:descriptions_for).and_return([owner_assocation, org_assocation])
+
+    results = subject.search(request('tickets', '_id', 'aaaaa'))
+    expect(results.size).to eq(1)
+    first_result = results.first
+    expect(first_result.attributes)
+        .to eq('_id' => 'aaaaa',
+               'subject' => 'Has no owner',
+               'done' => false,
+               'tags' => [],
+               owner_assocation => [],
+               org_assocation => [] )
+  end
+
   it 'returns all the search sources' do
     expect(subject.search_sources).to contain_exactly('example',
                                                       'organizations',

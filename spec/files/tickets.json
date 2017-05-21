@@ -6,5 +6,11 @@
     "owner_id": 1,
     "organization_id": 1,
     "tags": [ "Job", "Melbourne"]
+  },
+  {
+    "_id": "aaaaa",
+    "subject": "Has no owner",
+    "done": false,
+    "tags": []
   }
 ]
